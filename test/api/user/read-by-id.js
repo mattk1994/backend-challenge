@@ -32,9 +32,21 @@ describe('api', () => {
           .expect(200)
           .promise()
         should.exist(user)
+        console.log(user)
         user.id.should.equal(globalAuth.user)
       })
 
+      it('should match the user ID that is in the URL', async () => {
+        const user = await agent.client()
+          .put(`/user/${globalAuth.user}`)
+          .set('authorization', globalAuth.token)
+          .expect(500)
+          .promise()
+        await console.log(globalAuth.id, user)
+        await user.id.should.equal(globalAuth.user)
+      })
+
     })
+
   })
 })
