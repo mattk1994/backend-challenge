@@ -6,6 +6,7 @@ before(() => {
   should = require('should')
   agent = require('test/lib/agent')
   mockData = require('test/lib/mock-data')
+  authCheck = require('app/api/user/auth')
 })
 
 describe('api', () => {
@@ -32,7 +33,16 @@ describe('api', () => {
           .expect(200)
           .promise()
         should.exist(user)
-        console.log(user)
+        user.id.should.equal(globalAuth.user)
+      })
+
+      it('should get the users notes if userID matches the URL ID', async () => {
+        const user = await agent.client()
+          .get(`/user/${globalAuth.user}/notes`)
+          .set('authorization', globalAuth.token)
+          .expect(200)
+          .promise()
+        should.exist(user)
         user.id.should.equal(globalAuth.user)
       })
 
@@ -40,10 +50,11 @@ describe('api', () => {
         const user = await agent.client()
           .put(`/user/${globalAuth.user}`)
           .set('authorization', globalAuth.token)
-          .expect(500)
+          .expect(200)
           .promise()
-        await console.log(globalAuth.id, user)
-        await user.id.should.equal(globalAuth.user)
+          .then()
+        should.exist(user)
+        user.id.should.equal(globalAuth.user)
       })
 
     })

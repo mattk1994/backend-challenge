@@ -8,6 +8,16 @@ module.exports = router => {
     await controller.read(req, res)
   })
 
+  router.get('/user/:id/notes', async (req, res) => {
+    await auth.requiresCurrentUser(req)
+    await controller.readNotes(req, res)
+  })
+
+  router.post('/note', async (req, res) => {
+    await auth.requiresLogin(req)
+    await controller.postNotes(req, res)
+  })
+
   router.put('/user/:id', async (req, res) => {
     await auth.requiresCurrentUser(req)
     await validator.update(req)
